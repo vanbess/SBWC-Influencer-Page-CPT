@@ -102,9 +102,9 @@ add_action('manage_influencer_page_posts_custom_column', function ($column, $pos
 
             // check if usage limit is set to minus one, echo unlimited symbol
             if ($coupon_usage_limit == '-1') {
-                    
-                    // echo unlimited symbol
-                    echo '&#8734;';
+
+                // echo unlimited symbol
+                echo '&#8734;';
             } else {
 
                 // echo usage limit
@@ -113,7 +113,7 @@ add_action('manage_influencer_page_posts_custom_column', function ($column, $pos
 
             // if usage limit is empty string, echo unlimited symbol
 
-        }elseif($coupon_usage_limit === ''){
+        } elseif ($coupon_usage_limit === '') {
             echo '-';
         }
     }
@@ -121,13 +121,17 @@ add_action('manage_influencer_page_posts_custom_column', function ($column, $pos
     // if coupon expiry date column
     if ($column === 'sbwc_influencer_coupon_expiry') {
 
-        // get coupon expiry date
-        $coupon_expiry_date = get_post_meta($post_id, 'sbwc_influencer_coupon_expiry', true);
+        // get WC coupon object
+        $coupon = new WC_Coupon(get_post_meta($post_id, 'sbwc_influencer_coupon_id', true));
 
-        // if coupon expiry date, echo
-        if ($coupon_expiry_date) {
-            echo $coupon_expiry_date;
-        }
+        // get expiry date
+        $expiry_date = $coupon->get_date_expires();
+
+        // get server time zone
+        $server_time_zone = date_default_timezone_get();
+
+        // if expiry date, echo
+        echo date('j F Y @ h:i:s', strtotime($expiry_date)) . ' ' . $server_time_zone;
     }
 }, 10, 2);
 
@@ -157,7 +161,6 @@ add_filter('manage_edit-influencer_page_sortable_columns', function ($columns) {
 
     // return columns
     return $columns;
-
 }, 10, 1);
 
 /**
@@ -208,6 +211,4 @@ add_action('pre_get_posts', function ($query) {
         $query->set('meta_key', 'sbwc_influencer_coupon_expiry');
         $query->set('orderby', 'meta_value');
     }
-
 }, 10, 1);
-?>

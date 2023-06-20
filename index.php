@@ -56,5 +56,6 @@ add_post_type_support('influencer_page', 'elementor');
 
 // flush rewrite rules on plugin activation to ensure our cpt works with Elementor and doesn't cause 404 errors
 register_activation_hook(__FILE__, function () {
-    flush_rewrite_rules();
+    // update option to flush rewrite rules
+    update_option('sbwc_influencer_page_flush_rewrite_rules', true);
 });

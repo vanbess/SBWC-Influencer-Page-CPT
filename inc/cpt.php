@@ -81,6 +81,16 @@ add_action('init', function () {
 
     register_post_type('influencer_page', $args);
 
+    // check if we need to flush rewrite rules to get elementor to work and to avoid 404 errors for this post type
+    if(get_option('sbwc_influencer_page_flush_rewrite_rules')):
+
+        // flush rewrite rules
+        flush_rewrite_rules();
+
+        // delete the option
+        delete_option('sbwc_influencer_page_flush_rewrite_rules');
+    
+    endif;
     
 });
 

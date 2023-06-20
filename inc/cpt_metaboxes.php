@@ -54,9 +54,18 @@ function sbwc_influencer_page_meta_box_callback($post)
 
     // important instructions to use CSS class on each Elementor element that the user wants to add the coupon code to
 ?>
-    <p style="background-color: #ed143d30; padding: 10px;">
-        <b><i><u><?php _e('IMPORTANT:', 'sbwc-influencer-page'); ?></u></i></b> <?php _e('To display the coupon code on the page, add the CSS class <b>ip-coupon-code</b> to each Elementor element you want to display the coupon code in. The coupon code will be inserted inside this element or elements.', 'sbwc-influencer-page'); ?>
-    </p>
+    <div style="background-color: #ed143d30; padding: 10px; border-radius: 3px;">
+        <b><i><u><?php _e('IMPORTANT:', 'sbwc-influencer-page'); ?></u></i></b>
+
+        <ul style="list-style:decimal; padding-left: 20px;">
+            <li>
+                <?php _e('To display the coupon code on the page, add the CSS class <b>ip-coupon-code</b> to each Elementor element you want to display the coupon code in. The coupon code will be inserted inside this element or elements.', 'sbwc-influencer-page'); ?>
+            </li>
+            <li>
+                <?php _e('If Elementor\'s editor fails to load or seems to be hanging, or visiting this page on the front-end produces a 404 error, please navigate to Settings -> Permalinks and click on the Save Changes button at the bottom of the page to flush permalinks.', 'sbwc-influencer-page'); ?>
+            </li>
+        </ul>
+    </div>
 
     <?php
     // coupon id
