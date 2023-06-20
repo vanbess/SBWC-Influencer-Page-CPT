@@ -50,3 +50,11 @@ require_once plugin_dir_path(__FILE__) . 'inc/cpt_manage_columns.php';
 
 // query theme templates
 require_once plugin_dir_path(__FILE__) . 'inc/query_theme_templates.php';
+
+// add post type support for elementor
+add_post_type_support('influencer_page', 'elementor');
+
+// flush rewrite rules on plugin activation to ensure our cpt works with Elementor and doesn't cause 404 errors
+register_activation_hook(__FILE__, function () {
+    flush_rewrite_rules();
+});

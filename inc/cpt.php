@@ -70,7 +70,7 @@ add_action('init', function () {
         'map_meta_cap'          => true,
         'hierarchical'          => true,
         'rewrite'               => array(
-            'slug'       => 'Influencer Page',
+            'slug'       => 'influencer-page',
             'with_front' => true,
         ),
         'query_var'             => true,
@@ -81,8 +81,7 @@ add_action('init', function () {
 
     register_post_type('influencer_page', $args);
 
-    // add post type support for elementor
-    add_post_type_support('influencer_page', 'elementor');
+    
 });
 
 /**
