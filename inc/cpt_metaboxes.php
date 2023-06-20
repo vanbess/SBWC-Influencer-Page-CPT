@@ -49,6 +49,18 @@ function sbwc_influencer_page_meta_box_callback($post)
     // get coupon expiry date from coupon id
     $coupon_expiry_date = get_post_meta($coupon_id, 'sbwc_influencer_coupon_expiry', true);
 
+    // if coupon expiry date, echo, else echo error
+    if ($coupon_expiry_date) {
+        $date_set = true;
+        $coupon_expiry_date = date('Y-m-d', strtotime($coupon_expiry_date));
+    } else {
+        $date_set = false;
+        $coupon_expiry_date = date('today');
+    }
+
+    // get product ids from post meta
+    $product_ids = get_post_meta($post->ID, 'sbwc_influencer_page_products', true);
+
     // nonce field
     wp_nonce_field('sbwc_influencer_page_meta_box', 'sbwc_influencer_page_meta_box_nonce');
 
@@ -107,7 +119,7 @@ function sbwc_influencer_page_meta_box_callback($post)
             }
             ?>
         </select>
-        <icon>?</icon> <span class="ip-help" style="display: none;"><?php _e('Select the products you are going to use on the page, i.e. the products the coupon which is generated for this particular will be limited to.', 'sbwc-influencer-page'); ?></span>
+        <icon>?</icon> <span class="ip-help" style="display: none;"><?php _e('Select the products you are going to use on the page, i.e. the products to which the coupon which is generated will be limited to.', 'sbwc-influencer-page'); ?></span>
     </p>
 
     <!-- select2 js -->
@@ -115,7 +127,6 @@ function sbwc_influencer_page_meta_box_callback($post)
         jQuery(document).ready(function($) {
             $('#sbwc_influencer_page_products').select2({
                 placeholder: '<?php _e('Select products', 'sbwc-influencer-page'); ?>',
-                allowClear: true,
             });
         });
     </script>
@@ -185,7 +196,7 @@ function sbwc_influencer_page_meta_box_callback($post)
         <label for="sbwc_influencer_coupon_expiry"><b><i><?php _e('Expiry Date', 'sbwc-influencer-page'); ?></i></b></label>
     </p>
     <p>
-        <input type="date" class="form-field regular-text" name="sbwc_influencer_coupon_expiry" id="sbwc_influencer_coupon_expiry" value="<?php echo date('Y-m-d', strtotime($coupon_expiry_date)); ?>" />
+        <input type="date" class="form-field regular-text" name="sbwc_influencer_coupon_expiry" id="sbwc_influencer_coupon_expiry" <?php echo $date_set ? 'readonly' : null;  ?> value="<?php echo $coupon_expiry_date; ?>" />
         <icon>?</icon><span class="ip-help" style="display: none;"> <?php _e('The date the coupon should expire and can no longer be used. Leave empty to use sbwc-influencer-page expiry time (48 hours from page publication date).', 'sbwc-influencer-page'); ?></span>
 
     </p>

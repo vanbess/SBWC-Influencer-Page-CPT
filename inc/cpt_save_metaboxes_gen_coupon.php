@@ -36,12 +36,21 @@ add_action('save_post_influencer_page', function ($post_id, $post, $update) {
         return;
     }
 
+    // save product ids
+    if (isset($_POST['sbwc_influencer_page_products'])) {
+
+        // log
+        error_log('product ids: ' . $_POST['sbwc_influencer_page_products']);
+
+        update_post_meta($post_id, 'sbwc_influencer_page_products', $_POST['sbwc_influencer_page_products']);
+    }
+
     // save coupon code
     if (isset($_POST['sbwc_influencer_coupon_code'])) {
         update_post_meta($post_id, 'sbwc_influencer_coupon_code', sanitize_text_field($_POST['sbwc_influencer_coupon_code']));
     }
 
-    // save <?php _e('coupon discount amount','sbwc-influencer-page');
+    // save coupon discount amount
     if (isset($_POST['sbwc_influencer_coupon_discount_amount'])) {
         update_post_meta($post_id, 'sbwc_influencer_coupon_discount_amount', sanitize_text_field($_POST['sbwc_influencer_coupon_discount_amount']));
     }
@@ -68,6 +77,9 @@ add_action('save_post_influencer_page', function ($post_id, $post, $update) {
 
         update_post_meta($post_id, 'sbwc_influencer_coupon_expiry', sanitize_text_field($_POST['sbwc_influencer_coupon_expiry']));
     }
+
+    // get product ids
+    $product_ids = get_post_meta($post_id, 'sbwc_influencer_page_products', true);
 
     // check if page has WooCommerce coupon associated with it
     $coupon_code = get_post_meta($post_id, 'sbwc_influencer_coupon_code', true);
@@ -127,6 +139,11 @@ add_action('save_post_influencer_page', function ($post_id, $post, $update) {
 
     // set coupon code
     $coupon->set_code($coupon_code);
+
+    // if product ids set, set product ids
+    if ($product_ids) {
+        $coupon->set_product_ids($product_ids);
+    }
 
     // set coupon type
     $coupon->set_discount_type($coupon_discount_type);
