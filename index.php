@@ -25,11 +25,16 @@ if (!in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get
     return;
 }
 
+// check if Polylang is installed and activated, else bail with admin notice
+if (!in_array('polylang-wc/polylang-wc.php', apply_filters('active_plugins', get_option('active_plugins')))) {
+    add_action('admin_notices', function () {
+        echo '<div class="error"><p>SBWC Influencer Page Custom Post Type requires Polylang to be installed and active.</p></div>';
+    });
+    return;
+}
+
 // include custom post type
 require_once plugin_dir_path(__FILE__) . 'inc/cpt.php';
-
-// custom post type save action which generates coupon code
-// require_once plugin_dir_path(__FILE__) . 'inc/cpt_save_gen_coupon.php';
 
 // add coupon code to matching dom elements
 require_once plugin_dir_path(__FILE__) . 'inc/add_coupon_code_to_dom.php';
