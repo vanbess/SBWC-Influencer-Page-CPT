@@ -38,44 +38,27 @@ add_action('save_post_influencer_page', function ($post_id, $post, $update) {
 
     // save product ids
     if (isset($_POST['sbwc_influencer_page_products'])) {
-
-        // log
-        error_log('product ids: ' . $_POST['sbwc_influencer_page_products']);
-
         update_post_meta($post_id, 'sbwc_influencer_page_products', $_POST['sbwc_influencer_page_products']);
     }
 
     // save coupon code
     if (isset($_POST['sbwc_influencer_coupon_code'])) {
-        update_post_meta($post_id, 'sbwc_influencer_coupon_code', sanitize_text_field($_POST['sbwc_influencer_coupon_code']));
+        update_post_meta($post_id, 'sbwc_influencer_coupon_code', $_POST['sbwc_influencer_coupon_code']);
     }
 
     // save coupon discount amount
     if (isset($_POST['sbwc_influencer_coupon_discount_amount'])) {
-        update_post_meta($post_id, 'sbwc_influencer_coupon_discount_amount', sanitize_text_field($_POST['sbwc_influencer_coupon_discount_amount']));
+        update_post_meta($post_id, 'sbwc_influencer_coupon_discount_amount', $_POST['sbwc_influencer_coupon_discount_amount']);
     }
 
     // save coupon discount type
     if (isset($_POST['sbwc_influencer_coupon_discount_type'])) {
-        update_post_meta($post_id, 'sbwc_influencer_coupon_discount_type', sanitize_text_field($_POST['sbwc_influencer_coupon_discount_type']));
+        update_post_meta($post_id, 'sbwc_influencer_coupon_discount_type', $_POST['sbwc_influencer_coupon_discount_type']);
     }
 
     // save coupon usage limit
     if (isset($_POST['sbwc_influencer_coupon_usage_limit'])) {
-
-        // log
-        error_log('usage limit: ' . $_POST['sbwc_influencer_coupon_usage_limit']);
-
-        update_post_meta($post_id, 'sbwc_influencer_coupon_usage_limit', sanitize_text_field($_POST['sbwc_influencer_coupon_usage_limit']));
-    }
-
-    // save coupon expiry date
-    if (isset($_POST['sbwc_influencer_coupon_expiry'])) {
-
-        // log
-        error_log('expiry date: ' . $_POST['sbwc_influencer_coupon_expiry']);
-
-        update_post_meta($post_id, 'sbwc_influencer_coupon_expiry', sanitize_text_field($_POST['sbwc_influencer_coupon_expiry']));
+        update_post_meta($post_id, 'sbwc_influencer_coupon_usage_limit', $_POST['sbwc_influencer_coupon_usage_limit']);
     }
 
     // get product ids
@@ -94,25 +77,21 @@ add_action('save_post_influencer_page', function ($post_id, $post, $update) {
     $coupon_usage_limit = get_post_meta($post_id, 'sbwc_influencer_coupon_usage_limit', true);
 
     // if coupon usage limit == 0, set to empty string to make coupon unlimited
-    if ($coupon_usage_limit == 0) {
+    if ($coupon_usage_limit =='-1') {
         $coupon_usage_limit = '';
     }
 
     // get coupon id from post meta
     $coupon_id = get_post_meta($post_id, 'sbwc_influencer_coupon_id', true);
 
-    // get coupon expiry date from coupon id
-    $coupon_expiry_date = get_post_meta($coupon_id, 'sbwc_influencer_coupon_expiry', true);
+    // get WC coupon object
+    $coupon = new WC_Coupon($coupon_id);
 
-    // if expiry date set and coupon not yet expired, bail
+    // check expiry date
+    $coupon_expiry_date = $coupon->get_date_expires();
+
+    // if coupon not yet expired, bail
     if ($coupon_expiry_date && strtotime($coupon_expiry_date) > time()) {
-        return;
-    }
-
-    // if coupon is present but does not have expiry date, set expiry date to 48 hours from now and bail
-    if ($coupon_id && !$coupon_expiry_date) {
-        $coupon_expiry_date = date('Y-m-d H:i:s', strtotime('+48 hours'));
-        update_post_meta($coupon_id, 'sbwc_influencer_coupon_expiry', $coupon_expiry_date);
         return;
     }
 
@@ -154,15 +133,14 @@ add_action('save_post_influencer_page', function ($post_id, $post, $update) {
     // set coupon usage limit
     $coupon->set_usage_limit($coupon_usage_limit);
 
+    // set description to influencer page title
+    $coupon->set_description(get_the_title($post_id));
+
     // set usage per user limit
     $coupon->set_usage_limit_per_user(1);
 
-    // if coupon expiry date provided, set expiry date, else set to 48 hours from now
-    if ($coupon_expiry_date) {
-        $coupon->set_date_expires($coupon_expiry_date);
-    } else {
-        $coupon->set_date_expires(date('Y-m-d H:i:s', strtotime('+48 hours')));
-    }
+    // set expiry date
+    $coupon->set_date_expires(date('Y-m-d H:i:s', strtotime('+48 hours')));
 
     // save coupon
     $coupon->save();
