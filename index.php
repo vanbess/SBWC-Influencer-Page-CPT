@@ -28,7 +28,7 @@ if (!in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get
 // check if Polylang is installed and activated, else bail with admin notice
 if (!in_array('polylang-wc/polylang-wc.php', apply_filters('active_plugins', get_option('active_plugins')))) {
     add_action('admin_notices', function () {
-        echo '<div class="error"><p>SBWC Influencer Page Custom Post Type requires Polylang to be installed and active.</p></div>';
+        echo '<div class="error"><p>SBWC Influencer Page Custom Post Type requires Polylang for WooCommerce to be installed and active.</p></div>';
     });
     return;
 }
