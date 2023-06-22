@@ -46,7 +46,7 @@ function sbwc_influencer_page_meta_box_callback($post)
     // get coupon id from post meta
     $coupon_id = get_post_meta($post->ID, 'sbwc_influencer_coupon_id', true);
 
-    // get product ids from post meta
+     // get product ids from post meta
     $product_ids = get_post_meta($post->ID, 'sbwc_influencer_page_products', true);
 
     // nonce field

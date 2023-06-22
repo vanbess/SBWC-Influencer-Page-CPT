@@ -4,7 +4,7 @@
  * Plugin Name:       SBWC Influencer Page Custom Post Type
  * Plugin URI:        N/A 
  * Description:       Custom Post Type for Influencer Page and functionality to auto generate WooCommerce coupon code per page which expires in 48 hours and is then regenerated.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            WC Bessinger
  * Author URI:        N/A
  * License:           GPL-2.0+
@@ -50,6 +50,9 @@ require_once plugin_dir_path(__FILE__) . 'inc/cpt_manage_columns.php';
 
 // query theme templates
 require_once plugin_dir_path(__FILE__) . 'inc/query_theme_templates.php';
+
+// action scheduler renewal action
+require_once plugin_dir_path(__FILE__) . 'inc/as_schedule_coupon_renewal.php';
 
 // add post type support for elementor
 add_post_type_support('influencer_page', 'elementor');
